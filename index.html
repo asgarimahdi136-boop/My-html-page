@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#22c55e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="BEROON">
+<title>BEROON</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2322c55e'/%3E%3Ctext x='50' y='62' font-size='42' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'%3EB%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f0fdf4;          /* سبز خیلی روشن */
+  --card:#ffffff;        /* سفید */
+  --card2:#f7fdf9;       /* سبز محو برای فیلدها */
+  --line:#d1fae5;        /* حاشیه سبز روشن */
+  --txt:#0f172a;         /* متن تیره */
+  --muted:#64748b;       /* خاکستری */
+  --acc:#22c55e;         /* سبز اصلی */
+  --acc2:#16a34a;        /* سبز پررنگ‌تر */
+  --ok:#16a34a;
+  --no:#ef4444;
+  --warn:#f59e0b;
+  --shadow:0 4px 14px rgba(34,197,94,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn',Tahoma,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:90px}
+
+/* ===== Header ===== */
+header{
+  background:linear-gradient(135deg,#ffffff,#e8f9ee);
+  padding:14px 18px;
+  border-bottom:2px solid var(--acc);
+  position:sticky;top:0;z-index:50;
+  box-shadow:var(--shadow);
+}
+.header-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{
+  font-family:'Arial Black',Arial,sans-serif;
+  font-weight:900;font-size:22px;letter-spacing:2px;
+  color:var(--acc2);
+  padding:4px 10px;
+  border:3px solid var(--acc2);
+  border-radius:8px;
+  background:#fff;
+  line-height:1;
+  user-select:none;
+}
+.station-wrap{flex:1;text-align:left;min-width:0}
+.station-input{
+  width:100%;
+  background:#fff;
+  border:1.5px dashed var(--acc);
+  color:var(--txt);
+  font-size:15px;
+  font-weight:600;
+  padding:8px 12px;
+  border-radius:10px;
+  outline:none;
+  text-align:center;
+  transition:.2s;
+}
+.station-input:focus{border-style:solid;box-shadow:0 0 0 3px rgba(34,197,94,.15)}
+.station-input::placeholder{color:#94a3b8;font-weight:400}
+
+.clock-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:8px;font-size:11px;color:var(--muted);
+}
+.clock{display:flex;align-items:center;gap:6px;font-weight:600;color:var(--acc2);font-size:13px}
+.clock .dot{width:8px;height:8px;border-radius:50%;background:var(--acc);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ===== Tabs ===== */
+.tabs{
+  display:flex;gap:6px;padding:12px;overflow-x:auto;
+  background:var(--bg);position:sticky;top:98px;z-index:40;
+  border-bottom:1px solid var(--line);
+}
+.tabs button{
+  flex:0 0 auto;background:#fff;border:1px solid var(--line);
+  color:var(--muted);padding:9px 14px;border-radius:10px;
+  font-size:13px;cursor:pointer;transition:.2s;font-family:inherit;
+  font-weight:600;
+}
+.tabs button.active{background:var(--acc);color:#fff;border-color:var(--acc);box-shadow:0 3px 10px rgba(34,197,94,.3)}
+.tabs button:hover:not(.active){background:var(--card2);color:var(--txt)}
+
+main{padding:16px;max-width:1100px;margin:0 auto}
+.view{display:none;animation:fade .3s}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:16px;margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+.card h3{font-size:14px;margin-bottom:12px;color:var(--acc2);display:flex;align-items:center;gap:6px}
+
+label{display:block;font-size:12px;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{
+  width:100%;background:var(--card2);border:1.5px solid var(--line);
+  color:var(--txt);padding:10px 12px;border-radius:9px;font-size:13px;
+  font-family:inherit;outline:none;transition:.2s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--acc);background:#fff;box-shadow:0 0 0 3px rgba(34,197,94,.12)}
+textarea{resize:vertical;min-height:60px}
+
+.btn{
+  background:var(--acc);color:#fff;border:none;padding:10px 18px;
+  border-radius:9px;font-size:13px;cursor:pointer;font-family:inherit;
+  font-weight:700;transition:.2s;
+}
+.btn:hover{background:var(--acc2);transform:translateY(-1px)}
+.btn.sm{padding:6px 12px;font-size:12px}
+.btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--muted)}
+.btn.ghost:hover{background:var(--card2);color:var(--txt);border-color:var(--acc)}
+.btn.danger{background:var(--no)}
+.btn.danger:hover{background:#dc2626}
+.btn.ok{background:var(--ok)}
+.btn.warn{background:var(--warn)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+
+.row{
+  display:flex;align-items:center;gap:10px;padding:12px;
+  background:var(--card2);border-radius:10px;margin-bottom:8px;
+  border:1px solid var(--line);
+}
+.row .info{flex:1;font-size:13px;min-width:0}
+.row .info b{color:var(--txt);display:block;margin-bottom:3px;font-weight:700}
+.row .info small{color:var(--muted);font-size:11px;display:block;line-height:1.7}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;margin-right:4px;font-weight:700}
+.badge.ok{background:#dcfce7;color:#15803d}
+.badge.no{background:#fee2e2;color:#b91c1c}
+.badge.warn{background:#fef3c7;color:#b45309}
+.badge.acc{background:#dbeafe;color:#1d4ed8}
+
+.empty{text-align:center;color:var(--muted);font-size:13px;padding:30px 10px}
+
+.day-list .row{cursor:pointer}
+.day-list .row.today{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc);background:#ecfdf5}
+
+.fab{
+  position:fixed;bottom:22px;left:22px;width:56px;height:56px;
+  border-radius:50%;background:var(--acc);color:#fff;border:none;
+  font-size:28px;cursor:pointer;
+  box-shadow:0 8px 24px rgba(34,197,94,.45);
+  z-index:60;transition:.2s;
+}
+.fab:hover{background:var(--acc2);transform:scale(1.05)}
+
+.modal{
+  display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);
+  z-index:100;align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(3px);
+}
+.modal.open{display:flex}
+.modal-box{
+  background:#fff;width:100%;max-width:520px;
+  border-radius:18px 18px 0 0;padding:20px;
+  max-height:90vh;overflow-y:auto;
+  animation:up .3s;box-shadow:0 -6px 30px rgba(0,0,0,.15);
+}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.modal-box h3{font-size:15px;margin-bottom:14px;color:var(--acc2)}
+.modal-actions{display:flex;gap:8px;margin-top:16px}
+.modal-actions .btn{flex:1}
+
+.hint{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.6}
+.week-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.week-nav button{
+  background:#fff;border:1.5px solid var(--line);color:var(--txt);
+  width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:16px;font-weight:700;
+}
+.week-nav button:hover{background:var(--card2);border-color:var(--acc);color:var(--acc2)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo">BEROON</div>
+    <div class="station-wrap">
+      <input class="station-input" id="stationInput" placeholder="نام ایستگاه را وارد کنید" maxlength="40">
+    </div>
+  </div>
+  <div class="clock-bar">
+    <div class="clock"><span class="dot"></span><span id="clock">--:--:--</span> <span style="color:var(--muted);font-weight:400">تهران</span></div>
+    <div id="todayDate"></div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="active" data-view="schedule">📅 برنامه هفتگی</button>
+  <button data-view="today">🌞 امروز</button>
+  <button data-view="staff">👥 نیروها</button>
+  <button data-view="reports">📋 گزارش‌ها</button>
+</nav>
+
+<main>
+  <section class="view active" id="view-schedule">
+    <div class="card">
+      <div class="week-nav">
+        <button id="prevWeek">‹</button>
+        <div style="text-align:center">
+          <div style="font-size:13px;font-weight:700" id="weekLabel"></div>
+          <div style="font-size:11px;color:var(--muted)" id="weekRange"></div>
+        </div>
+        <button id="nextWeek">›</button>
+      </div>
+      <div class="hint" style="margin-bottom:10px">روی هر روز کلیک کن تا شیفت نیروها رو تنظیم کنی</div>
+      <div class="day-list" id="weekDays"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-today">
+    <div class="card">
+      <h3>🌞 شیفت‌های امروز</h3>
+      <div id="todayList"></div>
+    </div>
+    <div class="card">
+      <h3>➕ گزارش سریع امروز</h3>
+      <textarea id="quickReport" placeholder="نکات، کالاها، خدمات یا مواردی که نیروها گفتن..."></textarea>
+      <div style="margin-top:10px"><button class="btn" onclick="saveQuickReport()">ثبت گزارش</button></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-staff">
+    <div class="card">
+      <h3>👥 لیست نیروها</h3>
+      <div id="staffList"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-reports">
+    <div class="card">
+      <h3>📋 گزارش‌های ثبت شده</h3>
+      <div id="reportsList"></div>
+    </div>
+  </section>
+</main>
+
+<button class="fab" id="fab" title="افزودن">+</button>
+
+<div class="modal" id="modal">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<script>
+/* ================= Storage ================= */
+const DB = {
+  get(k, d){ try{ return JSON.parse(localStorage.getItem('sc_'+k)) ?? d }catch(e){ return d } },
+  set(k, v){ localStorage.setItem('sc_'+k, JSON.stringify(v)) }
+};
+let staff   = DB.get('staff', []);
+let shifts  = DB.get('shifts', {});
+let reports = DB.get('reports', []);
+let currentWeekStart = getWeekStart(new Date());
+const DAY_NAMES = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
+
+/* ================= نام ایستگاه ================= */
+const stationInput = document.getElementById('stationInput');
+stationInput.value = DB.get('station', '');
+stationInput.addEventListener('input', ()=> DB.set('station', stationInput.value.trim()));
+
+/* ================= ساعت تهران ================= */
+function updateTehranClock(){
+  try{
+    const now = new Date();
+    const t = now.toLocaleTimeString('en-GB', {timeZone:'Asia/Tehran', hour12:false});
+    document.getElementById('clock').textContent = t;
+    const d = now.toLocaleDateString('fa-IR', {timeZone:'Asia/Tehran', weekday:'long', day:'numeric', month:'long'});
+    document.getElementById('todayDate').textContent = d;
+  }catch(e){}
+}
+setInterval(updateTehranClock, 1000); updateTehranClock();
+
+/* ================= ابزار ================= */
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const fmt = d => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+};
+function getWeekStart(d){ const x=new Date(d); const day=(x.getDay()+1)%7; x.setDate(x.getDate()-day); x.setHours(0,0,0,0); return x; }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function faNum(n){ return String(n).replace(/\d/g, d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
+function todayStr(){ return fmt(new Date()); }
+function esc(s){ return String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ================= Navigation ================= */
+document.querySelectorAll('.tabs button').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('view-'+b.dataset.view).classList.add('active');
+    renderAll();
+  };
+});
+document.getElementById('fab').onclick = ()=>{
+  const active = document.querySelector('.tabs button.active').dataset.view;
+  if(active==='staff') openStaffModal();
+  else if(active==='reports') openReportModal();
+  else if(active==='schedule') openShiftModal(todayStr());
+  else openReportModal();
+};
+document.getElementById('prevWeek').onclick = ()=>{ currentWeekStart = addDays(currentWeekStart,-7); renderWeek(); };
+document.getElementById('nextWeek').onclick = ()=>{ currentWeekStart = addDays(currentWeekStart, 7); renderWeek(); };
+
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').onclick = e => { if(e.target.id==='modal') closeModal(); };
+
+/* ================= نیروها ================= */
+function renderStaff(){
+  const box = document.getElementById('staffList');
+  if(!staff.length){ box.innerHTML = '<div class="empty">هنوز نیرویی اضافه نشده. دکمه + رو بزن.</div>'; return; }
+  box.innerHTML = staff.map(s=>`
+    <div class="row">
+      <div class="info">
+        <b>${esc(s.name)}</b>
+        <small>📞 ${esc(s.phone||'—')}</small>
+        ${s.note?`<small>📝 ${esc(s.note)}</small>`:''}
+      </div>
+      <button class="btn sm ghost" onclick="openStaffModal('${s.id}')">ویرایش</button>
+      <button class="btn sm danger" onclick="delStaff('${s.id}')">حذف</button>
+    </div>`).join('');
+}
+function openStaffModal(id){
+  const s = id ? staff.find(x=>x.id===id) : {name:'',phone:'',note:''};
+  document.getElementById('modalBox').innerHTML = `
+    <h3>${id?'ویرایش':'افزودن'} نیرو</h3>
+    <label>نام و نام خانوادگی</label>
+    <input id="m_name" value="${esc(s.name)}" placeholder="مثلا علی رضایی">
+    <label>شماره تماس</label>
+    <input id="m_phone" value="${esc(s.phone||'')}" placeholder="0912...">
+    <label>یادداشت نیرو</label>
+    <textarea id="m_note" placeholder="توضیحات...">${esc(s.note||'')}</textarea>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal()">انصراف</button>
+      <button class="btn" onclick="saveStaff('${id||''}')">ذخیره</button>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+}
+function saveStaff(id){
+  const name = document.getElementById('m_name').value.trim();
+  const phone = document.getElementById('m_phone').value.trim();
+  const note = document.getElementById('m_note').value.trim();
+  if(!name){ alert('نام رو وارد کن'); return; }
+  if(id){ const s = staff.find(x=>x.id===id); Object.assign(s,{name,phone,note}); }
+  else staff.push({id:uid(),name,phone,note});
+  DB.set('staff', staff); closeModal(); renderAll();
+}
+function delStaff(id){
+  if(!confirm('حذف بشه؟')) return;
+  staff = staff.filter(x=>x.id!==id);
+  DB.set('staff', staff); renderAll();
+}
+
+/* ================= برنامه هفتگی ================= */
+function renderWeek(){
+  const start = currentWeekStart;
+  document.getElementById('weekLabel').textContent = 'هفته جاری';
+  document.getElementById('weekRange').textContent =
+    `${addDays(start,0).toLocaleDateString('fa-IR')} تا ${addDays(start,6).toLocaleDateString('fa-IR')}`;
+  const box = document.getElementById('weekDays');
+  const today = todayStr();
+  let html = '';
+  for(let i=0;i<7;i++){
+    const d = addDays(start, i);
+    const ds = fmt(d);
+    const sh = shifts[ds] || [];
+    html += `<div class="row ${ds===today?'today':''}" onclick="openShiftModal('${ds}')">
+      <div class="info">
+        <b>${DAY_NAMES[i]} — ${d.toLocaleDateString('fa-IR')}</b>
+        <small>${sh.length? sh.map(s=>{
+          const st = staff.find(x=>x.id===s.staffId);
+          return esc(st?st.name:'؟') + (s.status==='off'?' (مرخصی)':` ${s.start}-${s.end}`);
+        }).join(' • ') : 'بدون شیفت — کلیک کن'}</small>
+      </div>
+      <span class="badge ${sh.length?'acc':'warn'}">${faNum(sh.length)} شیفت</span>
+    </div>`;
+  }
+  box.innerHTML = html;
+}
+
+function openShiftModal(date){
+  if(!staff.length){ alert('اول نیرو اضافه کن (تب نیروها)'); return; }
+  const list = shifts[date] || [];
+  document.getElementById('modalBox').innerHTML = `
+    <h3>شیفت‌های ${new Date(date).toLocaleDateString('fa-IR')}</h3>
+    <div id="shiftItems">
+      ${list.map((s,i)=>shiftItemHTML(s,i,date)).join('')}
+    </div>
+    <button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="addShiftRow('${date}')">+ افزودن شیفت</button>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal()">بستن</button>
+      <button class="btn" onclick="saveShifts('${date}')">ذخیره</button>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+}
+function shiftItemHTML(s, i, date){
+  const opts = staff.map(x=>`<option value="${x.id}" ${x.id===s.staffId?'selected':''}>${esc(x.name)}</option>`).join('');
+  return `<div class="card" style="padding:10px;margin-bottom:8px">
+    <div class="grid2">
+      <div><label>نیرو</label><select class="sh_staff">${opts}</select></div>
+      <div><label>وضعیت</label>
+        <select class="sh_status">
+          <option value="on" ${s.status==='on'?'selected':''}>حاضر</option>
+          <option value="off" ${s.status==='off'?'selected':''}>مرخصی/جابجایی</option>
+        </select>
+      </div>
+      <div><label>ورود</label><input class="sh_start" type="time" value="${s.start||'08:00'}"></div>
+      <div><label>خروج</label><input class="sh_end" type="time" value="${s.end||'20:00'}"></div>
+    </div>
+    <label>اسم جایگزین (در صورت جابجایی)</label>
+    <input class="sh_sub" value="${esc(s.subName||'')}" placeholder="نام شخص جایگزین">
+    <label>یادداشت</label>
+    <textarea class="sh_note">${esc(s.note||'')}</textarea>
+    <div style="margin-top:6px"><button class="btn sm danger" onclick="this.closest('.card').remove()">حذف</button></div>
+  </div>`;
+}
+function addShiftRow(date){
+  const wrap = document.getElementById('shiftItems');
+  const div = document.createElement('div');
+  div.innerHTML = shiftItemHTML({staffId:staff[0].id,start:'08:00',end:'20:00',status:'on'}, wrap.children.length, date);
+  wrap.appendChild(div.firstElementChild);
+}
+function saveShifts(date){
+  const wrap = document.getElementById('shiftItems');
+  const arr = [];
+  wrap.querySelectorAll('.card').forEach(c=>{
+    arr.push({
+      staffId: c.querySelector('.sh_staff').value,
+      status:  c.querySelector('.sh_status').value,
+      start:   c.querySelector('.sh_start').value,
+      end:     c.querySelector('.sh_end').value,
+      subName: c.querySelector('.sh_sub').value.trim(),
+      note:    c.querySelector('.sh_note').value.trim()
+    });
+  });
+  shifts[date] = arr;
+  DB.set('shifts', shifts); closeModal(); renderAll();
+}
+
+/* ================= امروز ================= */
+function renderToday(){
+  const ds = todayStr();
+  const list = shifts[ds] || [];
+  const box = document.getElementById('todayList');
+  if(!list.length){ box.innerHTML = '<div class="empty">امروز شیفتی ثبت نشده. از تب برنامه هفتگی اضافه کن.</div>'; return; }
+  box.innerHTML = list.map(s=>{
+    const st = staff.find(x=>x.id===s.staffId);
+    return `<div class="row">
+      <div class="info">
+        <b>${esc(st?st.name:'؟')} ${s.status==='off'?'<span class="badge no">مرخصی/جابجایی</span>':'<span class="badge ok">حاضر</span>'}</b>
+        <small>📞 ${esc(st?st.phone:'—')}</small>
+        <small>🕐 ${s.start} تا ${s.end} ${s.subName?' — جایگزین: '+esc(s.subName):''}</small>
+        ${s.note?`<small>📝 ${esc(s.note)}</small>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+function saveQuickReport(){
+  const txt = document.getElementById('quickReport').value.trim();
+  if(!txt) return;
+  reports.push({id:uid(), date:todayStr(), text:txt, status:'pending', reason:''});
+  DB.set('reports', reports); document.getElementById('quickReport').value=''; renderAll();
+  alert('گزارش ثبت شد ✓');
+}
+
+/* ================= گزارش‌ها ================= */
+function renderReports(){
+  const box = document.getElementById('reportsList');
+  if(!reports.length){ box.innerHTML = '<div class="empty">هنوز گزارشی نیست. دکمه + رو بزن.</div>'; return; }
+  box.innerHTML = reports.slice().reverse().map(r=>`
+    <div class="row" style="flex-direction:column;align-items:stretch">
+      <div class="info">
+        <b>${new Date(r.date).toLocaleDateString('fa-IR')} 
+          <span class="badge ${r.status==='ok'?'ok':r.status==='no'?'no':'warn'}">
+            ${r.status==='ok'?'تایید شده':r.status==='no'?'رد شده':'در انتظار'}
+          </span>
+        </b>
+        <small>${esc(r.text)}</small>
+        ${r.reason?`<small style="color:var(--no)">دلیل: ${esc(r.reason)}</small>`:''}
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
+        <button class="btn sm ok" onclick="setReport('${r.id}','ok')">✓ تایید</button>
+        <button class="btn sm danger" onclick="setReport('${r.id}','no')">✗ رد</button>
+        <button class="btn sm ghost" onclick="openReportModal('${r.id}')">ویرایش</button>
+      </div>
+    </div>`).join('');
+}
+function setReport(id, status){
+  const r = reports.find(x=>x.id===id);
+  if(status==='no'){
+    const reason = prompt('دلیل رد شدن:');
+    if(reason===null) return;
+    r.reason = reason.trim(); r.status='no';
+  } else { r.status='ok'; r.reason=''; }
+  DB.set('reports', reports); renderAll();
+}
+function openReportModal(id){
+  const r = id ? reports.find(x=>x.id===id) : {date:todayStr(),text:'',status:'pending',reason:''};
+  document.getElementById('modalBox').innerHTML = `
+    <h3>${id?'ویرایش':'افزودن'} گزارش</h3>
+    <label>متن گزارش (کالا، خدمات، نکات نیروها)</label>
+    <textarea id="r_text" style="min-height:100px">${esc(r.text)}</textarea>
+    <label>تاریخ</label>
+    <input id="r_date" type="date" value="${r.date}">
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal()">انصراف</button>
+      <button class="btn" onclick="saveReport('${id||''}')">ذخیره</button>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+}
+function saveReport(id){
+  const text = document.getElementById('r_text').value.trim();
+  const date = document.getElementById('r_date').value;
+  if(!text||!date){ alert('متن و تاریخ الزامی است'); return; }
+  if(id){ const r=reports.find(x=>x.id===id); Object.assign(r,{text,date}); }
+  else reports.push({id:uid(),date,text,status:'pending',reason:''});
+  DB.set('reports', reports); closeModal(); renderAll();
+}
+
+function renderAll(){ renderWeek(); renderToday(); renderStaff(); renderReports(); }
+renderAll();
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
